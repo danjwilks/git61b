@@ -23,6 +23,9 @@ public class Body{
 		xxPos = b.xxPos;
 		yyPos = b.yyPos;
 		xxVel = b.xxVel;
+		yyVel = b.yyVel;
+		mass = b.mass;
+		imgFileName = b.imgFileName;
 	}
 
 	/** calculates the distance between two bodies */
@@ -32,6 +35,10 @@ public class Body{
 		double rsqred = Math.pow(xdis, 2) + Math.pow(ydis, 2);
 		double r = Math.sqrt(rsqred);
 		return r;	
+	}
+
+	public double calcForceExertedBy(Body b){
+		return this.calcForceExertedByX(b) + this.calcForceExertedByY(b);
 	}
 
 	/** calculates force exerted by input body in
