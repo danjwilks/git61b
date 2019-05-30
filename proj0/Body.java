@@ -34,6 +34,10 @@ public class Body{
 		return r;	
 	}
 
+	public double calcForceExertedBy(Body b){
+		return this.calcForceExertedByX(b) + this.calcForceExertedByY(b);
+	}
+
 	/** calculates force exerted by input body in
 	x direction*/
 	public double calcForceExertedByX(Body b){
