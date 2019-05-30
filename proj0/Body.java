@@ -85,6 +85,22 @@ public class Body{
 
 	}
 
+	public void update(double dt,double fX, double fY){
+		double accX = fX / this.mass;
+		double accY = fY / this.mass;
+
+		double newVelX = this.xxVel + dt*accX;
+		double newVelY = this.yyVel + dt*accY;
+
+		double newPosX = this.xxPos + dt*newVelX;
+		double newPosY = this.yyPos + dt*newVelY;
+
+		this.xxVel = newVelX;
+		this.xxPos = newPosX;
+		this.yyVel = newVelY;
+		this.yyPos = newPosY;
+	}
+
 	// public static void main(String[] args){
 	// 	Body samh = new Body(1, 0, 0, 0, 10, " ");
 	// 	Body roc = new Body(5, -3, 0, 0, 50, " ");
