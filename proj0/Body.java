@@ -101,6 +101,11 @@ public class Body{
 		this.yyPos = newPosY;
 	}
 
+	public void draw(){
+
+		StdDraw.picture(this.xxPos, this.yyPos, "images/" + this.imgFileName);
+	}
+
 	// public static void main(String[] args){
 	// 	Body samh = new Body(1, 0, 0, 0, 10, " ");
 	// 	Body roc = new Body(5, -3, 0, 0, 50, " ");
