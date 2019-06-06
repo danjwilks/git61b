@@ -16,83 +16,127 @@ public class LinkedListDeque<genericType>{
     }
 
     private int size;
-    private Node sentFront;
-    private Node sentBack;
-
+    private Node sentinel;
 
     public LinkedListDeque(){
-        sentFront = new Node(null, null, null);
+        sentinel = new Node(null, null, null);
         size = 0;
-        sentBack = new Node(sentFront, null, null);
-        sentFront.next = sentBack;
+        sentinel.next = sentinel;
+        sentinel.previous = sentinel;
 
     }
 
-    /** TODO deep copy
 
-     public LinkedListDeque(genericType item){
 
-     sentinel = new Node(null, null, null);
-     sentinel.next = new Node(sentinel, item, null);
-     size = 1;
-     //last = sentinel.next;
+    public LinkedListDeque(LinkedListDeque other){
 
-     }
+        LinkedListDeque copy = new LinkedListDeque();
 
-     */
+        for (int i = 0; i<other.size(); i++){
+            copy.addLast(other.get(i));
+        }
 
+    }
 
     public genericType getFirst(){
-        return sentFront.next.item;
+        return sentinel.next.item;
     }
 
     public void addFirst(genericType item){
         size += 1;
+        sentinel.next = new Node(sentinel, item, sentinel.next);
 
-        sentFront.next = new Node(sentFront, item, sentFront.next);
-        sentFront.next.next.previous = sentFront.next;
+        sentinel.next.next.previous = sentinel.next;
 
     }
 
     public void addLast(genericType item){
         size += 1;
 
-        sentBack.previous.next = new Node(sentBack.previous, item, sentBack);
-        sentBack.previous = sentBack.previous.next;
+        sentinel.previous = new Node(sentinel.previous, item, sentinel);
+
+        sentinel.previous.previous.next = sentinel.previous;
     }
 
-    public int size(){
+    public int size() {
         return size;
     }
 
     public boolean isEmpty(){
         if (size == 0){
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public void printDeque(){
-
+        Node ptr = sentinel.next;
+        while (ptr.item != null){
+            System.out.print(ptr.item);
+            ptr = ptr.next;
+        }
+        System.out.println("");
     }
 
     public genericType removeFirst(){
-        size -= 1;
-        genericType output = sentFront.next.item;
+        if (size > 0) {
 
-        sentFront.next = sentFront.next.next;
-        sentFront.next.previous = sentFront;
-        return output;
+            size -= 1;
+            genericType output = sentinel.next.item;
+
+            sentinel.next = sentinel.next.next;
+            sentinel.next.previous = sentinel;
+            return output;
+        } else {
+            return null;
+        }
+
     }
+
+    public genericType get(int index){
+        if (size >= index + 1) {
+
+            Node ptr = sentinel;
+            for (int i = 0; i <= index; i++) {
+                ptr = ptr.next;
+            }
+            return ptr.item;
+
+        } else{
+            return null;
+        }
+    }
+
+    public genericType getRecursive(int index) {
+
+        return this.recursiveHelper(index, this.sentinel);
+    }
+
+    public genericType recursiveHelper(int index, Node n){
+        if (index == 0){
+            return n.item;
+
+        } else {
+            n = n.next;
+            return recursiveHelper(index - 1, n);
+        }
+    }
+
+
+
 
 
 
     public static void main(String[] args) {
         LinkedListDeque test = new LinkedListDeque();
         test.addFirst(100);
-        test.addLast(0);
+        test.addFirst(10);
+        test.addFirst(1);
+        test.addFirst(0);
+        test.removeFirst();
+        test.removeFirst();
+       // test.addLast(0);
         // test.getFirst();
     }
 
