@@ -1,5 +1,11 @@
 public class ArrayDeque<item>{
 
+    /** invariants:
+     * size: is always the number of things in the items
+     * nextFirst: is always the index of next first item
+     * nextLast: is always the index of the next last item
+     * */
+
     item[] items;
     int size;
     int nextFirst;
@@ -17,32 +23,56 @@ public class ArrayDeque<item>{
 
     }
     // TODO update resize to be able to cope with remove
-    public void resize(){
+    public void resizeBigger(){
         item[] newArr = (item[]) new Object[size*resizeFactor];
-        System.arraycopy(items, nextFirst+1, newArr, 0, size - (nextFirst +1));
-        System.arraycopy(items, 0, newArr, size - (nextFirst +1), nextFirst+1);
-        nextFirst = newArr.length -1;
-        nextLast = size;
+        if (nextLast > nextFirst){
+            for (int i = 0; i<size;i++){
+                newArr[i] = items[(i+nextLast)%size];
+            }
+        } else {
+            for (int i = 0; i<size;i++) {
+                newArr[i] = items[(i + nextFirst) % size];
+            }
+        }
         items = newArr;
+
+        nextFirst = items.length -1;
+        nextLast = size;
+
     }
 
     public void addFirst(item i){
-        if (size == items.length){
-            resize();
-        }
+
         items[nextFirst] = i;
-        nextFirst --;
         size++;
+
+        if (nextFirst -1 == 0){
+            nextFirst = items.length -1;
+        } else {
+            nextFirst --;
+        }
+        if (size == items.length) {
+            resizeBigger();
+        }
+
 
     }
 
     public void addLast(item i){
-        if (size == items.length){
-            resize();
-        }
+
         items[nextLast] = i;
-        nextLast++;
         size++;
+
+        if (nextLast == items.length) {
+            nextLast = 0;
+        } else {
+            nextLast ++;
+        }
+
+        if (size == items.length){
+            resizeBigger();
+        }
+
     }
 
     public boolean isEmpty(){
@@ -54,6 +84,8 @@ public class ArrayDeque<item>{
     }
     // TODO create removeFirst
     public void removeFirst(){
+
+
 
     }
     // TODO create removeLast
