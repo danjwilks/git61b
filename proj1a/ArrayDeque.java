@@ -6,11 +6,12 @@ public class ArrayDeque<item>{
      * nextLast: is always the index of the next last item
      * */
 
-    item[] items;
-    int size;
-    int nextFirst;
-    int nextLast;
-    int resizeFactor;
+    private item[] items;
+    private int size;
+    private int nextFirst;
+    private int nextLast;
+    private int resizeFactor;
+    private double usageFactor;
 
     public ArrayDeque(){
 
@@ -20,10 +21,10 @@ public class ArrayDeque<item>{
         nextFirst = items.length -1;
         nextLast = 0;
         resizeFactor = 2;
+        usageFactor = 0.25;
 
     }
-    // TODO update resize to be able to cope with remove
-    public void resizeBigger(){
+    private void resizeBigger(){
         item[] newArr = (item[]) new Object[size*resizeFactor];
         if (nextLast > nextFirst){
             for (int i = 0; i<size;i++){
@@ -82,15 +83,80 @@ public class ArrayDeque<item>{
     public int size(){
         return size;
     }
+
+    private void resizeSmaller(){
+        double usage = (double) size / items.length;
+        if (usage < usageFactor){
+
+            int itemLength = items.length / 2;
+
+            item[] newArr = (item[]) new Object[itemLength];
+
+            for (int i = 0; i<itemLength;i++) {
+                newArr[i] = items[(i + nextFirst + 1) % items.length];
+            }
+            items = newArr;
+
+            nextFirst = items.length -1;
+            nextLast = size;
+
+
+
+        }
+
+    }
+
     // TODO create removeFirst
-    public void removeFirst(){
+    public item removeFirst(){
+        if (size == 0){
+            return null;
+        } else {
 
+            int first = nextFirst + 1;
 
+            if (first == items.length) {
+                first = 0;
+                nextFirst = 0;
+            } else {
+                nextFirst++;
+            }
+            size--;
+            item output = items[first];
+            items[first] = null;
+            resizeSmaller();
+            return output;
+
+        }
 
     }
     // TODO create removeLast
-    public void removeLast(){
+    public item removeLast(){
 
+        if (size == 0){
+            return null;
+        } else {
+
+            int last = nextLast - 1;
+
+            if (last == -1) {
+                last = items.length - 1;
+                nextLast = last;
+            } else {
+                nextLast--;
+            }
+            size--;
+            item output = items[last];
+            items[last] = null;
+            resizeSmaller();
+            return output;
+
+        }
+
+
+    }
+
+    public item get(int index){
+        return items[(index + nextFirst + 1)%items.length];
     }
 
 
@@ -127,7 +193,39 @@ public class ArrayDeque<item>{
         test.addFirst(-8);
         test.addLast(11);
         test.addLast(12);
+
+        test.removeFirst();
+
+        test.removeFirst();
+        test.removeFirst();
+        test.removeFirst();
+        test.removeFirst();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.addLast(11);
+        test.addLast(12);
+        test.addFirst(-4);
+        test.addFirst(-5);
+        test.addFirst(-6);
+        test.addFirst(-7);
+
+
         test.printDeque();
+
+        //System.out.println(test.get(10));
     }
 
 
