@@ -152,7 +152,14 @@ public class ArrayDeque<item>{
 
         }
 
+<<<<<<< HEAD
+=======
 
+    }
+>>>>>>> f04c6fc88d9b0566e628ebd19ecc2e67f669a72a
+
+    public item get(int index){
+        return items[(index + nextFirst + 1)%items.length];
     }
 
     public item get(int index){
@@ -171,4 +178,70 @@ public class ArrayDeque<item>{
         }
     }
 
+<<<<<<< HEAD
+=======
+    public static void main(String[] args) {
+        ArrayDeque test = new ArrayDeque();
+        test.addFirst(2);
+        test.addFirst(1);
+        test.addLast(3);
+        test.addLast(4);
+        test.addLast(5);
+        test.addLast(6);
+        test.addLast(7);
+        test.addLast(8);
+        test.addLast(9);
+        test.addLast(10);
+        test.addFirst(-1);
+        test.addFirst(-2);
+        test.addFirst(-3);
+        test.addFirst(-4);
+        test.addFirst(-5);
+        test.addFirst(-6);
+        test.addFirst(-7);
+        test.addFirst(-8);
+        test.addLast(11);
+        test.addLast(12);
+
+        test.removeFirst();
+
+        test.removeFirst();
+        test.removeFirst();
+        test.removeFirst();
+        test.removeFirst();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.removeLast();
+        test.addLast(11);
+        test.addLast(12);
+        test.addFirst(-4);
+        test.addFirst(-5);
+        test.addFirst(-6);
+        test.addFirst(-7);
+
+
+        test.printDeque();
+
+        //System.out.println(test.get(10));
+    }
+
+
+
+
+
+
+
+>>>>>>> f04c6fc88d9b0566e628ebd19ecc2e67f669a72a
 }
