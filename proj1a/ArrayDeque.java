@@ -107,7 +107,6 @@ public class ArrayDeque<item> {
 
     }
 
-    // TODO create removeFirst
     public item removeFirst() {
         if (size == 0) {
             return null;
@@ -131,7 +130,6 @@ public class ArrayDeque<item> {
 
     }
 
-    // TODO create removeLast
     public item removeLast() {
 
         if (size == 0) {
@@ -153,16 +151,8 @@ public class ArrayDeque<item> {
             return output;
 
         }
-
-<<<<<<<HEAD
-                =======
-
     }
->>>>>>>f04c6fc88d9b0566e628ebd19ecc2e67f669a72a
 
-    public item get(int index) {
-        return items[(index + nextFirst + 1) % items.length];
-    }
 
     public item get(int index) {
         return items[(index + nextFirst + 1) % items.length];
