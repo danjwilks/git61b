@@ -28,18 +28,6 @@ public class ArithmeticTest {
         assertEquals(0, Arithmetic.sum(6, -6));
     }
 
-    /** Performs test to see if reverse method is corrent */
-    @Test
-    public void testReverse(){
-        IntList A = new Intlist.of(1,2,3,4);
-        IntList Ar = new Intlist.of(4,3,2,1);
-
-
-        assertEquals(Ar, IntList.reverse(A));
-        assertNotEquals(A, IntList.reverse(A));
-        assertEquals(null, IntList.reverse(null));
-
-    }
 
     /* Run the unit tests in this file. */
     public static void main(String... args) {        
