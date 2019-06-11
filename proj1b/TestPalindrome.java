@@ -15,4 +15,27 @@ public class TestPalindrome {
         }
         assertEquals("persiflage", actual);
     }
+
+    /** tests to see if palindrome words are said to be palindrome */
+    @Test
+    public void testIsPalindrome(){
+        assertEquals(true, palindrome.isPalindrome(""));
+        assertEquals(true, palindrome.isPalindrome("a"));
+        assertEquals(true, palindrome.isPalindrome("A"));
+        assertEquals(true, palindrome.isPalindrome("helleh"));
+
+    }
+
+    /** tests to see if non-palindrome words are said to be palindrome */
+    @Test
+    public void testIsNotPalindrome(){
+        assertEquals(false, palindrome.isPalindrome("aA"));
+        assertEquals(false, palindrome.isPalindrome("nope"));
+        assertEquals(false, palindrome.isPalindrome("Aasdkvajsdn"));
+
+    }
+
+
+
 }
+
