@@ -104,10 +104,33 @@ public class IntList {
 
     }
 
+    public static IntList reverse(IntList A ){
+        if (A == null || A.rest == null){
+            return A;
+        }
+        IntList first = A;
+        IntList temp = A;
+        IntList temp1 = A.rest;
+        A = A.rest.rest;
+        temp.rest.rest = temp;
+        if (temp == first){
+            temp.rest = null;
+        } else {
+
+        }
+
+        while(A.rest != null){
+            IntList next = A.rest;
+            A.rest = temp1;
+            temp1 = A;
+            A = next;
+        }
+
+        A.rest = temp1;
 
 
-
-
+        return A;
+    }
 
 
 

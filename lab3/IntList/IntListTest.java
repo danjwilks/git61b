@@ -67,14 +67,14 @@ public class IntListTest {
     }
 
     /** Performs test to see if reverse method is corrent */
-    @Test
+    @Test(timeout = 1000)
     public void testReverse(){
-        IntList A = new Intlist.of(1,2,3,4);
-        IntList Ar = new Intlist.of(4,3,2,1);
+        IntList A = IntList.of(1,2,3);
+        IntList Ar = IntList.of(3,2,1);
 
 
         assertEquals(Ar, IntList.reverse(A));
-        assertNotEquals(A, IntList.reverse(A));
+       // assertNotEquals(A, IntList.reverse(A));
         assertEquals(null, IntList.reverse(null));
 
     }
