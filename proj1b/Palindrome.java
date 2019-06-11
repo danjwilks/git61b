@@ -11,9 +11,26 @@ public class Palindrome {
 
     }
 
+    private Deque<Character> reverse(Deque<Character> deque){
+
+        Deque<Character> reversed = new LinkedListDeque<Character>();
+        for (int i =0; i<deque.size(); i++){
+            char addToFront = deque.get(i);
+            reversed.addFirst(addToFront);
+
+        }
+        return reversed;
+
+    }
+
     public boolean isPalindrome(String word){
 
-        return true;
+        Deque<Character> wordDeque = wordToDeque(word);
+
+        Deque<Character> reversed = reverse(wordDeque);
+
+        return wordDeque.equals(reversed);
+
 
     }
 
