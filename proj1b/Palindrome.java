@@ -34,4 +34,27 @@ public class Palindrome {
 
     }
 
+    public boolean isPalindrome(String word, CharacterComparator cc){
+
+        Deque<Character> wordDeque = new LinkedListDeque<Character>();
+        wordDeque = wordToDeque(word);
+        Deque<Character> reversed = new LinkedListDeque<Character>();
+        reversed = reverse(wordToDeque(word));
+
+        boolean isPal = true;
+        for (int i = 0; i<word.length(); i++){
+
+            char char1 = wordDeque.get(i);
+            char char2 = reversed.get(i);
+            if (char1 == char2 || cc.equalChars(char1,char2)){
+            } else {
+                isPal = false;
+            }
+
+        }
+
+        return isPal;
+
+    }
+
 }
