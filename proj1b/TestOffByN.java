@@ -9,7 +9,6 @@ public class TestOffByN{
     @Test
     public void TestEqualChars(){
 
-        assertTrue(off.equalChars())
 
     }
 
