@@ -35,9 +35,10 @@ public class Plip extends Creature {
      */
     public Plip(double e) {
         super("plip");
-        r = 0;
-        g = 0;
-        b = 0;
+        double temp = 96*e + 63;
+        r = 99;
+        g = (int) temp;
+        b = 76;
         energy = e;
     }
 
@@ -58,7 +59,7 @@ public class Plip extends Creature {
      */
     public Color color() {
         g = 63;
-        return color(r, g, b);
+        return color(99, (int) (96*energy+63), 76);
     }
 
     /**
@@ -74,7 +75,10 @@ public class Plip extends Creature {
      * private static final variable. This is not required for this lab.
      */
     public void move() {
-        // TODO
+        energy = energy - 0.15;
+        if (energy < 0){
+            energy = 0;
+        }
     }
 
 
@@ -82,7 +86,10 @@ public class Plip extends Creature {
      * Plips gain 0.2 energy when staying due to photosynthesis.
      */
     public void stay() {
-        // TODO
+        energy = energy + 0.2;
+        if (energy > 2){
+            energy = 2;
+        }
     }
 
     /**
@@ -91,7 +98,11 @@ public class Plip extends Creature {
      * Plip.
      */
     public Plip replicate() {
-        return this;
+
+        energy = energy*0.5;
+
+
+        return new Plip(energy);
     }
 
     /**
@@ -113,7 +124,15 @@ public class Plip extends Creature {
         boolean anyClorus = false;
         // TODO
         // (Google: Enhanced for-loop over keys of NEIGHBORS?)
-        // for () {...}
+        for (Direction dir: neighbors.keySet()) {
+
+            boolean stay = false;
+
+            if (neighbors.get(dir).name().equals("empty")){
+                // TODO
+            }
+
+        }
 
         if (false) { // FIXME
             // TODO
