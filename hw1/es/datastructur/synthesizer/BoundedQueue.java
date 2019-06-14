@@ -8,16 +8,13 @@ public interface BoundedQueue<T> {
     T dequeue();        // delete and return item from the front
     T peek();           // return (but do not delete) item from the front
 
+    /** returns true if queue is empty */
     default boolean isEmpty(){
-        // TODO create this method
-        return true;
+        return 0 == fillCount();
     }
-
+    /** returns true if queue is full */
     default boolean isFull(){
-        // TODO create this method
-        return true;
+        return capacity() == fillCount();
     }
-
-
 
 }
