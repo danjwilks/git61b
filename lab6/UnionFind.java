@@ -1,11 +1,21 @@
 public class UnionFind {
 
+
+    private int[] array;
+
     // TODO - Add instance variables?
 
     /* Creates a UnionFind data structure holding n vertices. Initially, all
        vertices are in disjoint sets. */
     public UnionFind(int n) {
-        // TODO
+
+        array = new int[n];
+
+        for (int i: array){
+            i = -1;
+
+        }
+
     }
 
     /* Throws an exception if v1 is not a valid index. */
