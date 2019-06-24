@@ -2,43 +2,54 @@ public class UnionFind {
 
 
     private int[] array;
-
-    // TODO - Add instance variables?
+    private int size;
 
     /* Creates a UnionFind data structure holding n vertices. Initially, all
        vertices are in disjoint sets. */
     public UnionFind(int n) {
 
-        array = new int[n];
+        size = n;
+        array = new int[size];
 
-        for (int i: array){
-            i = -1;
-
+        for (int i = 0; i<n; i++){
+            array[i] = -1;
         }
-
     }
 
     /* Throws an exception if v1 is not a valid index. */
     private void validate(int vertex) {
-        // TODO
+        if (vertex >= size || vertex < 0){
+            throw new IllegalArgumentException("vertex is not a valid index");
+        }
     }
 
     /* Returns the size of the set v1 belongs to. */
     public int sizeOf(int v1) {
-        // TODO
-        return -1;
+
+        int size = Math.abs(array[find(v1)]);
+
+        return size;
     }
 
     /* Returns the parent of v1. If v1 is the root of a tree, returns the
        negative size of the tree for which v1 is the root. */
     public int parent(int v1) {
-        // TODO
-        return -1;
+
+        int child = array[v1];
+        if (child < 0){
+            return child;
+        }
+
+        int parent = array[child];
+
+        return parent;
     }
 
     /* Returns true if nodes v1 and v2 are connected. */
     public boolean connected(int v1, int v2) {
-        // TODO
+        if (find(v1) == find(v2)){
+            return true;
+        }
         return false;
     }
 
@@ -48,14 +59,54 @@ public class UnionFind {
        vertex with itself or vertices that are already connected should not 
        change the sets but may alter the internal structure of the data. */
     public void union(int v1, int v2) {
-        // TODO
+
+        if (!connected(v1, v2)){
+
+            if (sizeOf(v1) > sizeOf(v2)){
+
+                updateArray(v1,v2);
+
+            } else {
+
+                updateArray(v2,v1);
+
+            }
+        }
+    }
+
+    /** v1 size is bigger
+     * updates size and updates the roots */
+    private void updateArray(int v1, int v2){
+
+        updateSize(v1, sizeOf(v2));
+
+        int v2Root = find(v2);
+        array[v2Root] = find(v1);
+
+    }
+
+    /** updates the root value of v1*/
+    private void updateSize(int v1, int plusSize){
+
+        int root = find(v1);
+
+        array[root] = array[root] - plusSize;
+
     }
 
     /* Returns the root of the set V belongs to. Path-compression is employed
        allowing for fast search-time. */
+    // TODO
     public int find(int vertex) {
-        // TODO
-        return -1;
+
+        int root = vertex;
+
+        while(array[root] >= 0){
+            root = Math.abs(parent(root));
+        }
+
+        return root;
+
     }
 
 }
