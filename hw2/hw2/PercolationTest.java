@@ -11,9 +11,9 @@ public class PercolationTest {
     @Test
     public void xyTo1DTest(){
 
-        assertEquals (14, test.xyTo1D(2, 4));
-        assertEquals (0, test.xyTo1D(0, 0));
-        assertEquals (24, test.xyTo1D(4, 4));
+        assertEquals (15, test.xyTo1D(2, 4));
+        assertEquals (1, test.xyTo1D(0, 0));
+        assertEquals (25, test.xyTo1D(4, 4));
 
     }
 

@@ -9,6 +9,8 @@ public class Percolation {
 
     private WeightedQuickUnionUF squares;
 
+    private WeightedQuickUnionUF squaresIsFull;
+
     private int openSites;
 
     /**create N-by-N grid, with all sites initially blocked */
@@ -17,7 +19,8 @@ public class Percolation {
         grid = new boolean[N][N];
         sideLength = N;
 
-        squares = new WeightedQuickUnionUF(N*N);
+        squares = new WeightedQuickUnionUF(N*N + 2);
+        squaresIsFull = new WeightedQuickUnionUF(N*N + 1);
 
         openSites = 0;
 
@@ -30,7 +33,7 @@ public class Percolation {
     }
 
     public int xyTo1D(int row, int col){
-        return row * sideLength + col;
+        return row * sideLength + col + 1;
     }
 
     public boolean isSquare(int row, int col){
@@ -59,24 +62,33 @@ public class Percolation {
             if (isSquare(row - 1, col)) {
                 if (isOpen(row - 1, col)) {
                     squares.union(xyTo1D(row - 1, col), xyTo1D(row, col));
+                    squaresIsFull.union(xyTo1D(row - 1, col), xyTo1D(row, col));
                 }
+            } else { // quicker isFull
+                squares.union(0, xyTo1D(row, col));
+                squaresIsFull.union(0, xyTo1D(row, col));
             }
             // below
             if (isSquare(row + 1, col)) {
                 if (isOpen(row + 1, col)) {
                     squares.union(xyTo1D(row + 1, col), xyTo1D(row, col));
+                    squaresIsFull.union(xyTo1D(row + 1, col), xyTo1D(row, col));
                 }
+            } else {
+                squares.union(sideLength*sideLength + 1, xyTo1D(row, col));
             }
             // right
             if (isSquare(row, col + 1)) {
                 if (isOpen(row, col + 1)) {
                     squares.union(xyTo1D(row, col + 1), xyTo1D(row, col));
+                    squaresIsFull.union(xyTo1D(row, col + 1), xyTo1D(row, col));
                 }
             }
             // left
             if (isSquare(row, col - 1)) {
                 if (isOpen(row, col - 1)) {
                     squares.union(xyTo1D(row, col - 1), xyTo1D(row, col));
+                    squaresIsFull.union(xyTo1D(row, col - 1), xyTo1D(row, col));
                 }
             }
         }
@@ -90,12 +102,8 @@ public class Percolation {
     /** returns true if single space, row, col is full */
     public boolean isFull(int row, int col){
 
-        for (int i = 0; i<sideLength; i++){
-            if (squares.connected(i,xyTo1D(row,col))){
-                return true;
-            }
-        }
-        return false;
+        boolean output = squaresIsFull.connected(0, xyTo1D(row, col));
+        return output;
 
     }
 
@@ -106,12 +114,12 @@ public class Percolation {
 
     /** returns true if system percolates */
     public boolean percolates() {
-        for (int i = 0; i<sideLength;i++){
-            if(isFull(sideLength-1,i)){
-                return true;
-            }
-        }
-        return false;
-    }
 
+        boolean output;
+
+        output = squares.connected(0,sideLength*sideLength +1);
+
+        return output;
+
+    }
 }
