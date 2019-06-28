@@ -5,25 +5,48 @@ import java.util.LinkedList;
 
 public class MyHashMap<K, V> implements Map61B<K , V>{
 
-    int size;
+    int noOfBuckets;
     double loadFactor;
-    // TODO
-    // LinkedList buckets;
+    LinkedList<Entry>[] buckets;
     HashSet keys;
 
     public MyHashMap(){
 
-        size = 16;
+        noOfBuckets = 16;
         this.loadFactor = 0.75;
-        // TODO
-        // buckets =
+        buckets = new LinkedList[noOfBuckets];
+        for (int i = 0; i<noOfBuckets; i++){
+            buckets[i] = new LinkedList<>();
+        }
+
+        keys = new HashSet();
+
+    }
+
+    /** used to put key and value together */
+    private class Entry{
+
+        K key;
+        V value;
+
+        private Entry(K key, V value){
+            this.key = key;
+            this.value = value;
+        }
+
+        private void replaceBy(V value){
+
+            this.value = value;
+
+        }
 
     }
 
     @Override
     public void clear(){
-        for(int i = 0; i<size; i++){
-            //TODO
+        buckets = new LinkedList[noOfBuckets];
+        for (int i = 0; i<noOfBuckets; i++){
+            buckets[i] = new LinkedList<>();
         }
         keys.clear();
     }
@@ -40,8 +63,15 @@ public class MyHashMap<K, V> implements Map61B<K , V>{
      */
     @Override
     public V get(K key){
-        /** TODO: implement*/
 
+        int keyHashCode = 0x7fffffff & key.hashCode();
+        int modularHashCode = keyHashCode%noOfBuckets;
+
+        for (Entry e : buckets[modularHashCode]){
+            if (e.key.equals(key)){
+                return e.value;
+            }
+        }
         return null;
     }
 
@@ -59,6 +89,41 @@ public class MyHashMap<K, V> implements Map61B<K , V>{
     @Override
     public void put(K key, V value){
         /** TODO: implement*/
+
+        keys.add(key);
+        grow();
+        int keyHashCode = 0x7fffffff & key.hashCode();
+        int modularHashCode = keyHashCode%noOfBuckets;
+
+        for (Entry e : buckets[modularHashCode]){
+            if (e.key == key){
+                e.replaceBy(value);
+                return;
+            }
+        }
+
+        buckets[modularHashCode].add(new Entry(key, value));
+    }
+
+    /** checks to see if buckets are too filled */
+    private void grow(){
+
+        if (size()/noOfBuckets > loadFactor){
+
+            noOfBuckets = noOfBuckets *2;
+            buckets = new LinkedList[noOfBuckets];
+            for (int i = 0; i<noOfBuckets; i++){
+                buckets[i]= new LinkedList<>();
+            }
+
+            for (K key : keySet()){
+                V value = this.get(key);
+
+                put(key, value);
+
+            }
+        }
+
     }
 
     /** Returns a Set view of the keys contained in this map. */
