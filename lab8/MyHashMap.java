@@ -1,41 +1,29 @@
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.LinkedList;
 
 public class MyHashMap<K, V> implements Map61B<K , V>{
 
     int size;
     double loadFactor;
-    K[] buckets;
+    // TODO
+    // LinkedList buckets;
     HashSet keys;
 
     public MyHashMap(){
 
         size = 16;
         this.loadFactor = 0.75;
-        buckets = (K[]) new Object[size];
+        // TODO
+        // buckets =
 
     }
-    public MyHashMap(int initialSize){
-
-        size = initialSize;
-        this.loadFactor = 0.75;
-        buckets = (K[]) new Object[size];
-
-    }
-    public MyHashMap(int initialSize, double loadFactor){
-
-        size = initialSize;
-        this.loadFactor = loadFactor;
-        buckets = (K[]) new Object[size];
-
-    }
-
 
     @Override
     public void clear(){
         for(int i = 0; i<size; i++){
-            buckets[i] = null;
+            //TODO
         }
         keys.clear();
     }
@@ -54,15 +42,13 @@ public class MyHashMap<K, V> implements Map61B<K , V>{
     public V get(K key){
         /** TODO: implement*/
 
-
-
         return null;
     }
 
     /** Returns the number of key-value mappings in this map. */
     @Override
     public int size(){
-        return buckets.length;
+        return keys.size();
     }
 
     /**
@@ -106,31 +92,5 @@ public class MyHashMap<K, V> implements Map61B<K , V>{
     public Iterator iterator(){
         return keys.iterator();
     }
-
-//    private class MyHashMapIterator implements Iterator{
-//
-//        private int start;
-//        private int end;
-//
-//        public MyHashMapIterator(int start, int end){
-//
-//            this.start = start;
-//            this.end = end;
-//
-//
-//            keys.iterator();
-//
-//        }
-//
-//        @Override
-//        public boolean hasNext() {
-//            return false;
-//        }
-//
-//        @Override
-//        public Object next() {
-//            return null;
-//        }
-//    }
 
 }
