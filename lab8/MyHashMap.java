@@ -1,17 +1,49 @@
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 public class MyHashMap<K, V> implements Map61B<K , V>{
 
+    int size;
+    double loadFactor;
+    K[] buckets;
+    HashSet keys;
+
+    public MyHashMap(){
+
+        size = 16;
+        this.loadFactor = 0.75;
+        buckets = (K[]) new Object[size];
+
+    }
+    public MyHashMap(int initialSize){
+
+        size = initialSize;
+        this.loadFactor = 0.75;
+        buckets = (K[]) new Object[size];
+
+    }
+    public MyHashMap(int initialSize, double loadFactor){
+
+        size = initialSize;
+        this.loadFactor = loadFactor;
+        buckets = (K[]) new Object[size];
+
+    }
+
+
     @Override
     public void clear(){
-
+        for(int i = 0; i<size; i++){
+            buckets[i] = null;
+        }
+        keys.clear();
     }
 
     /** Returns true if this map contains a mapping for the specified key. */
     @Override
     public boolean containsKey(K key){
-        return true;
+        return keys.contains(key);
     }
 
     /**
@@ -20,13 +52,17 @@ public class MyHashMap<K, V> implements Map61B<K , V>{
      */
     @Override
     public V get(K key){
+        /** TODO: implement*/
+
+
+
         return null;
     }
 
     /** Returns the number of key-value mappings in this map. */
     @Override
     public int size(){
-        return -1;
+        return buckets.length;
     }
 
     /**
@@ -36,12 +72,13 @@ public class MyHashMap<K, V> implements Map61B<K , V>{
      */
     @Override
     public void put(K key, V value){
+        /** TODO: implement*/
     }
 
     /** Returns a Set view of the keys contained in this map. */
     @Override
     public Set<K> keySet(){
-        return null;
+        return keys;
     }
 
     /**
@@ -67,7 +104,33 @@ public class MyHashMap<K, V> implements Map61B<K , V>{
     /** allows myhashmap to be iterable */
     @Override
     public Iterator iterator(){
-        return null;
+        return keys.iterator();
     }
+
+//    private class MyHashMapIterator implements Iterator{
+//
+//        private int start;
+//        private int end;
+//
+//        public MyHashMapIterator(int start, int end){
+//
+//            this.start = start;
+//            this.end = end;
+//
+//
+//            keys.iterator();
+//
+//        }
+//
+//        @Override
+//        public boolean hasNext() {
+//            return false;
+//        }
+//
+//        @Override
+//        public Object next() {
+//            return null;
+//        }
+//    }
 
 }
