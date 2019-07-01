@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
 
-    private ArrayList<T> heap;
+    private ArrayList<Node> heap;
 
     public ArrayHeapMinPQ(){
-        heap = new ArrayList<>(null);
+        heap = new ArrayList<>();
+        heap.add(new Node(null, 0.0));
     }
 
 
@@ -17,6 +18,25 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     @Override
     public void add(T item, double priority){
 
+        heap.add(new Node(item, priority));
+        recSortHeap(heap.size() -1 );
+
+    }
+
+    /** recursively sorts new order after adding new item */
+    private void recSortHeap(int indexOfChild){
+        if (indexOfChild == 1){
+            return;
+        }
+        int indexOfParent = indexOfChild / 2;
+        if (heap.get(indexOfParent).priority < heap.get(indexOfChild).priority){
+            Node temp = heap.get(indexOfParent);
+            heap.remove(indexOfParent);
+            heap.add(indexOfParent, heap.get(indexOfChild-1));
+            heap.remove(indexOfChild);
+            heap.add(indexOfChild, temp);
+            recSortHeap(indexOfParent);
+        }
     }
 
     /* Returns true if the PQ contains the given item. */
@@ -28,7 +48,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     @Override
     public T getSmallest(){
-        return null;
+        return heap.get(1).item;
     }
 
     /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
