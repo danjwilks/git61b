@@ -65,7 +65,54 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     @Override
     public T removeSmallest(){
-        return null;
+        if (size() == 0){
+            throw new NoSuchElementException();
+        }
+
+        T output = heap.get(1).item;
+        int parentIndex = 1;
+        heap.remove(parentIndex);
+        Node newSmallest = heap.get(size());
+        heap.remove(size());
+        heap.add(parentIndex, newSmallest);
+
+        removeSmallestHelper(parentIndex);
+
+        return output;
+    }
+
+    /** recursively goes through and rearranges*/
+    private void removeSmallestHelper(int parentIndex){
+
+        int rightChildIndex = parentIndex * 2 + 1;
+        int leftChildIndex = parentIndex * 2;
+
+        if (rightChildIndex <= size()){
+            if (heap.get(rightChildIndex).priority > heap.get(parentIndex).priority && heap.get(rightChildIndex).priority > heap.get(leftChildIndex).priority){
+                swap(parentIndex, rightChildIndex);
+                removeSmallestHelper(rightChildIndex);
+            } else if (heap.get(leftChildIndex).priority > heap.get(parentIndex).priority) {
+                swap(parentIndex, leftChildIndex);
+                removeSmallestHelper(leftChildIndex);
+            }
+        } else if (leftChildIndex <= size()){
+            if (heap.get(leftChildIndex).priority > heap.get(parentIndex).priority){
+                swap(parentIndex, leftChildIndex);
+                removeSmallestHelper(leftChildIndex);
+            }
+        }
+
+    }
+
+    /** smaller index = index1 */
+    private void swap(int index1, int index2){
+
+        Node temp = heap.get(index1);
+        heap.remove(index1);
+        heap.add(index1, heap.get(index2 - 1));
+        heap.remove(index2);
+        heap.add(index2, temp);
+
     }
 
     /* Returns the number of items in the PQ. */
@@ -81,7 +128,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
 
     }
 
-    private class Node implements Comparable<Node>{
+    private class Node{
 
         T item;
         Double priority;
@@ -90,17 +137,5 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
             this.item = item;
             this.priority = priority;
         }
-
-        @Override
-        public int hashCode() {
-            return item.hashCode();
-        }
-
-        @Override
-        public int compareTo(Node anotherNode) {
-            return anotherNode.priority.compareTo(this.priority);
-        }
-
     }
-
 }

@@ -17,13 +17,13 @@ public class ArrayHeapMinPQTest {
         test.add(29, 12.0);
         test.add(234, 3423134);
 
-
-
         assertEquals(234, (int) test.getSmallest());
 
     }
 
-    /** tests to see if size works */
+    /** tests to see if size works
+     * assumes add and removeSmallest works */
+
     @Test
     public void sizeTest() {
         ArrayHeapMinPQ<Integer> test = new ArrayHeapMinPQ<>();
@@ -41,8 +41,10 @@ public class ArrayHeapMinPQTest {
 
         assertEquals(5, test.size());
 
+        test.removeSmallest();
+        test.removeSmallest();
 
-
+        assertEquals(3, test.size());
 
     }
 
