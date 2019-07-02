@@ -1,6 +1,7 @@
 package bearmaps;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
 
@@ -48,6 +49,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     @Override
     public T getSmallest(){
+        if (heap.size() == 1){
+            throw new NoSuchElementException();
+        }
         return heap.get(1).item;
     }
 
@@ -60,7 +64,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     /* Returns the number of items in the PQ. */
     @Override
     public int size(){
-        return 1;
+        return heap.size();
     }
 
     /* Changes the priority of the given item. Throws NoSuchElementException if the item
@@ -80,38 +84,16 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
             this.priority = priority;
         }
 
-        public T getItem(){
-            return this.item;
-        }
-
-        public Double getPriority(){
-            return this.priority;
-        }
-
-        @Override
-        public int compareTo(Node other) {
-            if (other == null) {
-                return -1;
-            }
-            return Double.compare(this.getPriority(), other.getPriority());
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public boolean equals(Object o) {
-            if (o == null || o.getClass() != this.getClass()) {
-                return false;
-            } else {
-                return ((Node) o).getItem().equals(getItem());
-            }
-        }
-
         @Override
         public int hashCode() {
             return item.hashCode();
         }
 
-    }
+        @Override
+        public int compareTo(Node anotherNode) {
+            return anotherNode.priority.compareTo(this.priority);
+        }
 
+    }
 
 }

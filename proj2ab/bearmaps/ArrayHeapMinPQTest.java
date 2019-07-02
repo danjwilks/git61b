@@ -17,6 +17,8 @@ public class ArrayHeapMinPQTest {
         test.add(29, 12.0);
         test.add(234, 3423134);
 
+
+
         assertEquals(234, (int) test.getSmallest());
 
     }
