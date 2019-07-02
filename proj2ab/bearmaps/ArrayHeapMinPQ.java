@@ -56,6 +56,18 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         return heap.get(rightChildIndex(i));
     }
 
+    /** returns true if left priority is less than right side */
+    private boolean less(Node l, Node r){
+        return l.priority < r.priority;
+    }
+
+    /** returns true if left priority is more than right side */
+    private boolean more(Node l, Node r){
+        return l.priority < r.priority;
+    }
+
+
+
 
 
     /* Adds an item with the given priority value. Throws an
@@ -82,7 +94,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         int indexOfParent = parentIndex(index);
 
 
-        if (parentNode(index).priority < heap.get(index).priority){
+        if (less(parentNode(index), heap.get(index))){
             Node temp = parentNode(index);
             heap.remove(indexOfParent);
             heap.add(indexOfParent, heap.get(index-1));
@@ -133,15 +145,15 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         int leftChildIndex = leftChildIndex(index);
 
         if (rightChildIndex <= size()){
-            if (rightChildNode(index).priority > heap.get(index).priority && rightChildNode(index).priority > leftChildNode(index).priority){
+            if (more(rightChildNode(index), heap.get(index)) && more(rightChildNode(index), leftChildNode(index))){
                 swap(index, rightChildIndex);
                 removeSmallestHelper(rightChildIndex);
-            } else if (leftChildNode(index).priority > heap.get(index).priority) {
+            } else if (more(leftChildNode(index), heap.get(index))) {
                 swap(index, leftChildIndex);
                 removeSmallestHelper(leftChildIndex);
             }
         } else if (leftChildIndex <= size()){
-            if (leftChildNode(index).priority > heap.get(index).priority){
+            if (more(leftChildNode(index), heap.get(index))){
                 swap(index, leftChildIndex);
                 removeSmallestHelper(leftChildIndex);
             }
