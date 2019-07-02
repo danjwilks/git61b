@@ -1,5 +1,6 @@
 package bearmaps;
 
+import edu.princeton.cs.algs4.Stopwatch;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -46,6 +47,68 @@ public class ArrayHeapMinPQTest {
 
         assertEquals(3, test.size());
 
+
     }
+
+    @Test
+    public void addTimeTest(){
+
+        ArrayHeapMinPQ<Integer> test = new ArrayHeapMinPQ<>();
+        Stopwatch sw = new Stopwatch();
+
+        for (int i = 1000; i > 0; i--){
+            test.add(i, (double) i);
+        }
+
+        System.out.println("Total time elapsed: " + sw.elapsedTime() +  " seconds.");
+
+
+
+        NaiveMinPQ<Integer> test1 = new NaiveMinPQ<>();
+        Stopwatch sw1 = new Stopwatch();
+
+        for (int i = 1000; i > 0; i--){
+            test1.add(i, (double) i);
+        }
+
+        System.out.println("Total time elapsed: " + sw1.elapsedTime() +  " seconds.");
+
+
+    }
+
+    @Test
+    public void removeSmallestTimeTest(){
+
+        ArrayHeapMinPQ<Integer> test = new ArrayHeapMinPQ<>();
+
+        for (int i = 1000000; i > 0; i--){
+            test.add(i, (double) i);
+        }
+
+        Stopwatch sw = new Stopwatch();
+
+        for (int i = 1000; i>1; i--){
+            test.removeSmallest();
+        }
+
+        System.out.println("Total time elapsed: " + sw.elapsedTime() +  " seconds.");
+
+        NaiveMinPQ<Integer> test1 = new NaiveMinPQ<>();
+
+        for (int i = 1000000; i > 1; i--){
+            test1.add(i, (double) i);
+        }
+
+        Stopwatch sw1 = new Stopwatch();
+
+        for (int i = 1000; i>1; i--){
+            test1.removeSmallest();
+        }
+
+        System.out.println("Total time elapsed: " + sw1.elapsedTime() +  " seconds.");
+
+
+    }
+
 
 }
