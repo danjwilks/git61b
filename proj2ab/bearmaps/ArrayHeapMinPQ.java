@@ -59,19 +59,19 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     }
 
     /** recursively sorts new order after adding new item */
-    private void recSortHeap(int indexOfChild){
-        if (indexOfChild == 1){
+    private void recSortHeap(int index){
+        if (index == 1){
             return;
         }
-        int indexOfParent = indexOfChild / 2;
+        int indexOfParent = parentIndex(index);
 
 
-        if (heap.get(indexOfParent).priority < heap.get(indexOfChild).priority){
+        if (heap.get(indexOfParent).priority < heap.get(index).priority){
             Node temp = heap.get(indexOfParent);
             heap.remove(indexOfParent);
-            heap.add(indexOfParent, heap.get(indexOfChild-1));
-            heap.remove(indexOfChild);
-            heap.add(indexOfChild, temp);
+            heap.add(indexOfParent, heap.get(index-1));
+            heap.remove(index);
+            heap.add(index, temp);
             recSortHeap(indexOfParent);
         }
     }
