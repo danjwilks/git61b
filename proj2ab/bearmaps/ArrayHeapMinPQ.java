@@ -26,7 +26,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
             throw new IllegalArgumentException("item is already present");
         }
         heap.add(new Node(item, priority));
-        recSortHeap(heap.size() -1 );
+        recSortHeap(size() );
         items.add(item);
 
     }
@@ -56,7 +56,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     @Override
     public T getSmallest(){
-        if (heap.size() == 1){
+        if (size() == 0){
             throw new NoSuchElementException();
         }
         return heap.get(1).item;
@@ -71,7 +71,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     /* Returns the number of items in the PQ. */
     @Override
     public int size(){
-        return heap.size();
+        return heap.size() - 1;
     }
 
     /* Changes the priority of the given item. Throws NoSuchElementException if the item
