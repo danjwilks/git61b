@@ -41,6 +41,21 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         return i * 2 + 1;
     }
 
+    /** returns node i's parent */
+    private Node parentNode(int i){
+        return heap.get(parentIndex(i));
+    }
+
+    /** returns node i's leftChildIndex */
+    private Node leftChildNode(int i){
+        return heap.get(leftChildIndex(i));
+    }
+
+    /** returns node i's rightChildIndex */
+    private Node rightChildNode(int i){
+        return heap.get(rightChildIndex(i));
+    }
+
 
 
     /* Adds an item with the given priority value. Throws an
@@ -63,11 +78,12 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         if (index == 1){
             return;
         }
+
         int indexOfParent = parentIndex(index);
 
 
-        if (heap.get(indexOfParent).priority < heap.get(index).priority){
-            Node temp = heap.get(indexOfParent);
+        if (parentNode(index).priority < heap.get(index).priority){
+            Node temp = parentNode(index);
             heap.remove(indexOfParent);
             heap.add(indexOfParent, heap.get(index-1));
             heap.remove(index);
@@ -111,22 +127,22 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     }
 
     /** recursively goes through and rearranges*/
-    private void removeSmallestHelper(int parentIndex){
+    private void removeSmallestHelper(int index){
 
-        int rightChildIndex = parentIndex * 2 + 1;
-        int leftChildIndex = parentIndex * 2;
+        int rightChildIndex = rightChildIndex(index);
+        int leftChildIndex = leftChildIndex(index);
 
         if (rightChildIndex <= size()){
-            if (heap.get(rightChildIndex).priority > heap.get(parentIndex).priority && heap.get(rightChildIndex).priority > heap.get(leftChildIndex).priority){
-                swap(parentIndex, rightChildIndex);
+            if (rightChildNode(index).priority > heap.get(index).priority && rightChildNode(index).priority > leftChildNode(index).priority){
+                swap(index, rightChildIndex);
                 removeSmallestHelper(rightChildIndex);
-            } else if (heap.get(leftChildIndex).priority > heap.get(parentIndex).priority) {
-                swap(parentIndex, leftChildIndex);
+            } else if (leftChildNode(index).priority > heap.get(index).priority) {
+                swap(index, leftChildIndex);
                 removeSmallestHelper(leftChildIndex);
             }
         } else if (leftChildIndex <= size()){
-            if (heap.get(leftChildIndex).priority > heap.get(parentIndex).priority){
-                swap(parentIndex, leftChildIndex);
+            if (leftChildNode(index).priority > heap.get(index).priority){
+                swap(index, leftChildIndex);
                 removeSmallestHelper(leftChildIndex);
             }
         }
