@@ -1,15 +1,18 @@
 package bearmaps;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
 
     private ArrayList<Node> heap;
+    private HashSet<T> items;
 
     public ArrayHeapMinPQ(){
         heap = new ArrayList<>();
         heap.add(new Node(null, 0.0));
+        items = new HashSet<>();
     }
 
 
@@ -19,8 +22,12 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     @Override
     public void add(T item, double priority){
 
+        if (contains(item)){
+            throw new IllegalArgumentException("item is already present");
+        }
         heap.add(new Node(item, priority));
         recSortHeap(heap.size() -1 );
+        items.add(item);
 
     }
 
@@ -43,7 +50,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     /* Returns true if the PQ contains the given item. */
     @Override
     public boolean contains(T item){
-        return true;
+        return items.contains(item);
     }
 
     /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
