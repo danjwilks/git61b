@@ -15,6 +15,33 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         items = new HashSet<>();
     }
 
+    private class Node{
+
+        T item;
+        Double priority;
+
+        private Node(T item, Double priority){
+            this.item = item;
+            this.priority = priority;
+        }
+    }
+
+    /** returns index of node i's parent */
+    private int parentIndex(int i){
+        return i / 2;
+    }
+
+    /** returns index of node i's leftChildIndex */
+    private int leftChildIndex(int i){
+        return i * 2;
+    }
+
+    /** returns index of node i's rightChildIndex */
+    private int rightChildIndex(int i){
+        return i * 2 + 1;
+    }
+
+
 
     /* Adds an item with the given priority value. Throws an
      * IllegalArgumentException if item is already present.
@@ -37,6 +64,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
             return;
         }
         int indexOfParent = indexOfChild / 2;
+
+
         if (heap.get(indexOfParent).priority < heap.get(indexOfChild).priority){
             Node temp = heap.get(indexOfParent);
             heap.remove(indexOfParent);
@@ -128,14 +157,4 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
 
     }
 
-    private class Node{
-
-        T item;
-        Double priority;
-
-        private Node(T item, Double priority){
-            this.item = item;
-            this.priority = priority;
-        }
-    }
 }
