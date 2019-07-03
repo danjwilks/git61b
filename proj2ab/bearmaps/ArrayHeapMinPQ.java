@@ -2,18 +2,11 @@ package bearmaps;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.NoSuchElementException;
 
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
 
-    private ArrayList<Node> heap;
-    private HashSet<T> items;
-
-    public ArrayHeapMinPQ(){
-        heap = new ArrayList<>();
-        heap.add(new Node(null, 0.0));
-        items = new HashSet<>();
-    }
+    ArrayList<Node> heap;
+    HashSet<T> items;
 
     private class Node{
 
@@ -26,49 +19,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         }
     }
 
-    /** returns index of node i's parent */
-    private int parentIndex(int i){
-        return i / 2;
+    public ArrayHeapMinPQ(){
+        heap = new ArrayList<>();
+        items = new HashSet<>();
     }
-
-    /** returns index of node i's leftChildIndex */
-    private int leftChildIndex(int i){
-        return i * 2;
-    }
-
-    /** returns index of node i's rightChildIndex */
-    private int rightChildIndex(int i){
-        return i * 2 + 1;
-    }
-
-    /** returns node i's parent */
-    private Node parentNode(int i){
-        return heap.get(parentIndex(i));
-    }
-
-    /** returns node i's leftChildIndex */
-    private Node leftChildNode(int i){
-        return heap.get(leftChildIndex(i));
-    }
-
-    /** returns node i's rightChildIndex */
-    private Node rightChildNode(int i){
-        return heap.get(rightChildIndex(i));
-    }
-
-    /** returns true if left priority is less than right side */
-    private boolean less(Node l, Node r){
-        return l.priority < r.priority;
-    }
-
-    /** returns true if left priority is more than right side */
-    private boolean more(Node l, Node r){
-        return l.priority < r.priority;
-    }
-
-
-
-
 
     /* Adds an item with the given priority value. Throws an
      * IllegalArgumentException if item is already present.
@@ -76,32 +30,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     @Override
     public void add(T item, double priority){
 
-        if (contains(item)){
-            throw new IllegalArgumentException("item is already present");
-        }
-        heap.add(new Node(item, priority));
-        recSortHeap(size() );
-        items.add(item);
-
-    }
-
-    /** recursively sorts new order after adding new item */
-    private void recSortHeap(int index){
-        if (index == 1){
-            return;
-        }
-
-        int indexOfParent = parentIndex(index);
-
-
-        if (less(parentNode(index), heap.get(index))){
-            Node temp = parentNode(index);
-            heap.remove(indexOfParent);
-            heap.add(indexOfParent, heap.get(index-1));
-            heap.remove(index);
-            heap.add(index, temp);
-            recSortHeap(indexOfParent);
-        }
     }
 
     /* Returns true if the PQ contains the given item. */
@@ -113,69 +41,20 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     @Override
     public T getSmallest(){
-        if (size() == 0){
-            throw new NoSuchElementException();
-        }
-        return heap.get(1).item;
+       return null;
     }
 
     /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     @Override
     public T removeSmallest(){
-        if (size() == 0){
-            throw new NoSuchElementException();
-        }
-
-        T output = heap.get(1).item;
-        int parentIndex = 1;
-        heap.remove(parentIndex);
-        Node newSmallest = heap.get(size());
-        heap.remove(size());
-        heap.add(parentIndex, newSmallest);
-
-        removeSmallestHelper(parentIndex);
-
-        return output;
-    }
-
-    /** recursively goes through and rearranges*/
-    private void removeSmallestHelper(int index){
-
-        int rightChildIndex = rightChildIndex(index);
-        int leftChildIndex = leftChildIndex(index);
-
-        if (rightChildIndex <= size()){
-            if (more(rightChildNode(index), heap.get(index)) && more(rightChildNode(index), leftChildNode(index))){
-                swap(index, rightChildIndex);
-                removeSmallestHelper(rightChildIndex);
-            } else if (more(leftChildNode(index), heap.get(index))) {
-                swap(index, leftChildIndex);
-                removeSmallestHelper(leftChildIndex);
-            }
-        } else if (leftChildIndex <= size()){
-            if (more(leftChildNode(index), heap.get(index))){
-                swap(index, leftChildIndex);
-                removeSmallestHelper(leftChildIndex);
-            }
-        }
-
-    }
-
-    /** smaller index = index1 */
-    private void swap(int index1, int index2){
-
-        Node temp = heap.get(index1);
-        heap.remove(index1);
-        heap.add(index1, heap.get(index2 - 1));
-        heap.remove(index2);
-        heap.add(index2, temp);
-
+        return null;
     }
 
     /* Returns the number of items in the PQ. */
     @Override
     public int size(){
-        return heap.size() - 1;
+
+        return 1;
     }
 
     /* Changes the priority of the given item. Throws NoSuchElementException if the item

@@ -6,14 +6,15 @@ import static org.junit.Assert.*;
 
 public class ArrayHeapMinPQTest {
 
-    /** tests getSmallest
+    /**
+     * tests getSmallest
      * requires add to work
      */
     @Test
-    public void isSmallestTest(){
+    public void isSmallestTest() {
         ArrayHeapMinPQ<Integer> test = new ArrayHeapMinPQ<>();
         test.add(9, 9.0);
-        test.add(10,10.0);
+        test.add(10, 10.0);
         test.add(8, 911.0);
         test.add(29, 12.0);
         test.add(234, 3423134);
@@ -22,8 +23,10 @@ public class ArrayHeapMinPQTest {
 
     }
 
-    /** tests to see if size works
-     * assumes add and removeSmallest works */
+    /**
+     * tests to see if size works
+     * assumes add and removeSmallest works
+     */
 
     @Test
     public void sizeTest() {
@@ -50,6 +53,7 @@ public class ArrayHeapMinPQTest {
 
     }
 
+
     @Test
     public void addTimeTest(){
 
@@ -64,7 +68,7 @@ public class ArrayHeapMinPQTest {
 
 
 
-        NaiveMinPQ<Integer> test1 = new NaiveMinPQ<>();
+        comparison<Integer> test1 = new comparison<>();
         Stopwatch sw1 = new Stopwatch();
 
         for (int i = 1000; i > 0; i--){
@@ -93,7 +97,7 @@ public class ArrayHeapMinPQTest {
 
         System.out.println("Total time elapsed: " + sw.elapsedTime() +  " seconds.");
 
-        NaiveMinPQ<Integer> test1 = new NaiveMinPQ<>();
+        comparison<Integer> test1 = new comparison<>();
 
         for (int i = 1000000; i > 1; i--){
             test1.add(i, (double) i);
@@ -106,6 +110,56 @@ public class ArrayHeapMinPQTest {
         }
 
         System.out.println("Total time elapsed: " + sw1.elapsedTime() +  " seconds.");
+
+
+    }
+
+
+                                /** tests only comparison */
+
+    /**
+     * tests getSmallest
+     * requires add to work
+     */
+    @Test
+    public void isSmallestTestC() {
+        comparison<Integer> test = new comparison<>();
+        test.add(9, 9.0);
+        test.add(10, 10.0);
+        test.add(8, 911.0);
+        test.add(29, 12.0);
+        test.add(234, 3423134);
+
+        assertEquals(234, (int) test.getSmallest());
+
+    }
+
+    /**
+     * tests to see if size works
+     * assumes add and removeSmallest works
+     */
+
+    @Test
+    public void sizeTestC() {
+        comparison<Integer> test = new comparison<>();
+
+        assertEquals(0, test.size());
+
+        test.add(9, 9.0);
+        test.add(10, 10.0);
+
+        assertEquals(2, test.size());
+
+        test.add(8, 911.0);
+        test.add(29, 12.0);
+        test.add(234, 3423134);
+
+        assertEquals(5, test.size());
+
+        test.removeSmallest();
+        test.removeSmallest();
+
+        assertEquals(3, test.size());
 
 
     }
