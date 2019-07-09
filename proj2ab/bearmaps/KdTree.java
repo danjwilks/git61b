@@ -10,9 +10,11 @@ public class KdTree {
         Point point;
         Node left;
         Node right;
+        int xory;
 
-        private Node(Point point){
+        private Node(Point point, int xory){
             this.point = point;
+            this.xory = xory;
         }
     }
 
@@ -30,24 +32,23 @@ public class KdTree {
         int coordinate = 1;
 
         if (root == null){
-            root = new Node(point);
+            root = new Node(point, 0);
         } else {
 
             Node currentNode = root;
-            //TODO refactor, reuse code somehow, maybe a comparator
 
             while (currentNode != null) {
                 if (coordinate == 1){
                     if (currentNode.point.getX() <= point.getX()) {
                         if (currentNode.right == null) {
-                            currentNode.right = new Node(point);
+                            currentNode.right = new Node(point, 1);
                             break;
                         } else {
                             currentNode = currentNode.right;
                         }
                     } else {
                         if (currentNode.left == null) {
-                            currentNode.left = new Node(point);
+                            currentNode.left = new Node(point, 1);
                             break;
                         } else {
                             currentNode = currentNode.left;
@@ -57,14 +58,14 @@ public class KdTree {
                 } else {
                     if (currentNode.point.getY() <= point.getY()) {
                         if (currentNode.right == null) {
-                            currentNode.right = new Node(point);
+                            currentNode.right = new Node(point, 0);
                             break;
                         } else {
                             currentNode = currentNode.right;
                         }
                     } else {
                         if (currentNode.left == null) {
-                            currentNode.left = new Node(point);
+                            currentNode.left = new Node(point, 0);
                             break;
                         } else {
                             currentNode = currentNode.left;
@@ -88,8 +89,33 @@ public class KdTree {
         if (distance(n, goal) < distance(best, goal)){
             best = n;
         }
-        best = nearestHelper(n.left, goal, best);
-        best = nearestHelper(n.right, goal, best);
+        Node goodside;
+        Node badside;
+
+        if (n.xory == 1){
+            if (n.point.getY() < goal.getY()){
+                goodside = n.right;
+                badside = n.left;
+            } else {
+                goodside = n.left;
+                badside = n.right;
+            }
+        } else {
+            if (n.point.getX() < goal.getX()){
+                goodside = n.right;
+                badside = n.left;
+            } else {
+                goodside = n.left;
+                badside = n.right;
+            }
+        }
+
+
+        best = nearestHelper(goodside, goal, best);
+
+        //TODO see if badside has something meaningful...
+
+        best = nearestHelper(badside, goal, best);
 
         return best;
 
