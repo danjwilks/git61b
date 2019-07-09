@@ -113,9 +113,18 @@ public class KdTree {
 
         best = nearestHelper(goodside, goal, best);
 
-        //TODO see if badside has something meaningful...
+        Point bestPossible;
 
-        best = nearestHelper(badside, goal, best);
+        if (n.xory == 0){
+            bestPossible = new Point(n.point.getX(), goal.getY());
+
+        } else {
+            bestPossible = new Point(goal.getX(), n.point.getY());
+        }
+
+        if (Point.distance(bestPossible, goal) < Point.distance(goal,best.point)){
+            best = nearestHelper(badside, goal, best);
+        }
 
         return best;
 

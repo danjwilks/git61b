@@ -92,5 +92,27 @@ public class KDTreeTest {
 
     }
 
+    /** simple test to use to see if pruning works */
+    @Test
+    public void pruning(){
 
+        List<Point> list = new LinkedList<>();
+
+        for (int i = 10; i<100; i++){
+            Random ran = new Random();
+            double x = ran.nextDouble()*100;
+            double y = ran.nextDouble()*100;
+            list.add(new Point(x,y));
+        }
+
+        Point theOne = new Point(3.99999, 3.99999);
+        list.add(theOne);
+        KdTree test = new KdTree(list);
+
+        Point p = new Point (4.0,4.0);
+        Point result = test.nearest(p.getX(),p.getY());
+
+        assertEquals(theOne, result);
+
+    }
 }
