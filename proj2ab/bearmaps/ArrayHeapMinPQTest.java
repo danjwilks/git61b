@@ -119,8 +119,7 @@ public class ArrayHeapMinPQTest {
 
         test.removeSmallest();
 
-
-        System.out.println("Total time elapsed: " + sw.elapsedTime() +  " seconds.");
+        System.out.println("My implementation: " + sw.elapsedTime() +  " seconds.");
 
 
 
@@ -130,9 +129,9 @@ public class ArrayHeapMinPQTest {
         }
         Stopwatch sw1 = new Stopwatch();
 
-            test1.removeSmallest();
+        test1.removeSmallest();
 
-        System.out.println("Total time elapsed: " + sw1.elapsedTime() +  " seconds.");
+        System.out.println("Naive implementation: " + sw1.elapsedTime() +  " seconds.");
 
 
     }
@@ -141,32 +140,37 @@ public class ArrayHeapMinPQTest {
     public void removeSmallestTimeTest() {
 
         ArrayHeapMinPQ<Integer> test = new ArrayHeapMinPQ<>();
-
         for (int i = 100000; i > 0; i--) {
             test.add(i, (double) i);
         }
-
         Stopwatch sw = new Stopwatch();
-
         for (int i = 1000; i > 1; i--) {
             test.removeSmallest();
         }
+        System.out.println("My implementation: " + sw.elapsedTime() + " seconds.");
 
-        System.out.println("Total time elapsed: " + sw.elapsedTime() + " seconds.");
 
         comparison<Integer> test1 = new comparison<>();
-
         for (int i = 100000; i > 0; i--) {
             test1.insert(i);
         }
-
         Stopwatch sw1 = new Stopwatch();
-
         for (int i = 1000; i > 1; i--) {
             test1.delMin();
         }
+        System.out.println("Comparison implementation: " + sw1.elapsedTime() + " seconds.");
 
-        System.out.println("Total time elapsed: " + sw1.elapsedTime() + " seconds.");
+
+
+        NaiveMinPQ<Integer> test2 = new NaiveMinPQ<>();
+        for (int i = 100000; i > 0; i--) {
+            test2.add(i, (double) i);
+        }
+        Stopwatch sw2 = new Stopwatch();
+        for (int i = 1000; i > 1; i--) {
+            test2.removeSmallest();
+        }
+        System.out.println("Naive implementation: " + sw2.elapsedTime() + " seconds.");
 
     }
 
