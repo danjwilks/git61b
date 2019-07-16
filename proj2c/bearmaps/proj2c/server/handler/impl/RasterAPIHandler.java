@@ -12,15 +12,17 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static bearmaps.proj2c.utils.Constants.*;
+import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
+import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
 
 /**
  * Handles requests from the web browser for map images. These images
  * will be rastered into one large image to be displayed to the user.
- * @author rahul, Josh Hug, Daniel Wilks
  */
 public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<String, Object>> {
 
@@ -81,146 +83,69 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        System.out.println(requestParams);
-
-        /** create query box object */
-        double ullon = requestParams.get("ullon");
-        double ullat = requestParams.get("ullat");
-        double lrlon = requestParams.get("lrlon");
-        double lrlat = requestParams.get("lrlat");
-        double width = requestParams.get("w");
-        double height = requestParams.get("h");
-
-        QueryBox queryBox = new QueryBox(ullon, ullat, lrlon, lrlat, width, height);
-
+//        System.out.println("yo, wanna know the parameters given by the web browser? They are:");
+//        System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+//        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
+//                + "your browser.");
+        double lrlon = requestParams.get("lrlon");
+        double ullon = requestParams.get("ullon");
+        double width = requestParams.get("w");
+        double ullat = requestParams.get("ullat");
+        double lrlat = requestParams.get("lrlat");
+
+        if (Constants.ROOT_LRLON < ullon || Constants.ROOT_LRLAT > ullat
+                || Constants.ROOT_ULLON > lrlon || Constants.ROOT_ULLAT < lrlat
+                || lrlon < ullon || ullat < lrlat) {
+            results.put("query_success", false);
+            return results;
+        }
+
+        int depth = getImageDepth(ullon, lrlon, width);
+
+        double lonDistPerTile = (Constants.ROOT_LRLON - Constants.ROOT_ULLON) / Math.pow(2, depth);
+        double latDistPerTile = (Constants.ROOT_ULLAT - Constants.ROOT_LRLAT) / Math.pow(2, depth);
+        int ulX = (int) Math.abs((ullon - Constants.ROOT_ULLON) / lonDistPerTile);
+        int ulY = (int) Math.abs((ullat - Constants.ROOT_ULLAT) / latDistPerTile);
+        int lrX = (int) Math.abs((lrlon - Constants.ROOT_ULLON) / lonDistPerTile);
+        int lrY = (int) Math.abs((lrlat - Constants.ROOT_ULLAT) / latDistPerTile);
+
+        String[][] renderGrid = new String[lrY - ulY + 1][lrX - ulX + 1];
+        for (int i = 0; i <= lrY - ulY; i += 1) {
+            for (int j = 0; j <= lrX - ulX; j += 1) {
+                renderGrid[i][j] = "d" + depth + "_x" + (ulX + j) + "_y" + (ulY + i) + ".png";
+            }
+        }
+
+        double rasterUllon = Constants.ROOT_ULLON + ulX * lonDistPerTile;
+        double rasterUllat = Constants.ROOT_ULLAT - ulY * latDistPerTile;
+        double rasterLrlon = Constants.ROOT_ULLON + (lrX + 1) * lonDistPerTile;
+        double rasterLrlat = Constants.ROOT_ULLAT - (lrY + 1) * latDistPerTile;
+
+        results.put("raster_ul_lon", rasterUllon);
+        results.put("raster_ul_lat", rasterUllat);
+        results.put("raster_lr_lon", rasterLrlon);
+        results.put("raster_lr_lat", rasterLrlat);
+        results.put("render_grid", renderGrid);
+        results.put("depth", depth);
+        results.put("query_success", true);
+
         return results;
     }
 
-    public static Depth getDepth(QueryBox queryBox){
-        for (int i = 0; i<8; i++){
-            Depth d = new Depth(i);
-            Image image = d.images[0][0];
-            double lonDPP = calLonDPP(image.upperLeft.longitude,image.lowerRight.longitude,TILE_SIZE);
-
-            if (queryBox.lonDPP >= lonDPP){
-                return d;
-            }
+    private int getImageDepth(double ullon, double lrlon, double width) {
+        double maxLonDPP = lonDPP(lrlon, ullon, width);
+        int depth = 0;
+        double lonDPP = (Constants.ROOT_LRLON - Constants.ROOT_ULLON) / Constants.TILE_SIZE;
+        while (lonDPP > maxLonDPP && depth < 7) {
+            depth += 1;
+            lonDPP /= 2;
         }
-        return null;
+        return depth;
     }
 
-    public static class Depth{
-
-        final double widthOfImages;
-        final double heightOfImages;
-        final Image[][] images;
-
-        public Depth(int depth){
-
-            int numberOfImages = (int) Math.pow(4,depth);
-            int rowsTotal = (int) Math.pow(2, depth);
-            int columnsTotal = (int) Math.pow(2, depth);
-
-            widthOfImages = Math.abs(ROOT_ULLON - ROOT_LRLON)/rowsTotal;
-            heightOfImages = Math.abs(ROOT_ULLAT - ROOT_LRLAT)/rowsTotal;
-
-
-            images = new Image[rowsTotal][columnsTotal];
-
-            for (int y = 0; y<rowsTotal; y++){
-
-                for (int x = 0; x<columnsTotal; x++) {
-
-                    String name = "d" + depth + "_x" + x + "_y" + y + ".png";
-                    images[x][y] = new Image(name, widthOfImages, heightOfImages, x, y);
-                }
-            }
-        }
-    }
-
-    public static class Image{
-
-        String name;
-        HashMap<String, Integer> coordinates;
-        double widthOfImages;
-        Set corners;
-        Corner upperLeft;
-        Corner lowerRight;
-
-        public Image(String name, double widthOfImages, double heightOfImages, int x, int y){
-
-            this.name = name;
-            this.widthOfImages = widthOfImages;
-            coordinates = new HashMap<>();
-            coordinates.put("x", x);
-            coordinates.put("y", y);
-            corners = new HashSet();
-
-            // x, column is latitude
-            // y, row is longitude
-
-            for (int column = 0; column<2; column++){
-                for (int row = 0; row<2; row++){
-
-                    double xCoordinate = ROOT_ULLON + widthOfImages*(x+column);
-                    double yCoordinate = ROOT_ULLAT - heightOfImages*(y+row);
-
-                    Corner corner = new Corner(xCoordinate , yCoordinate);
-
-                    if (column == 0 && row == 0){
-                        upperLeft = corner;
-                    } else if ( column == 1 && row == 1){
-                        lowerRight = corner;
-                    }
-
-                    corners.add(corner);
-                }
-            }
-
-        }
-    }
-
-    public static class Corner{
-
-        double longitude;
-        double latitude;
-
-        public Corner(double longitude, double latitude){
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-    }
-
-    public static class QueryBox{
-
-        double ullon;
-        double ullat;
-        double lrlon;
-        double lrlat;
-        double lonDPP;
-        double width;
-        double height;
-
-        public QueryBox(double ullon, double ullat, double lrlon, double lrlat, double width, double height){
-            this.ullon = ullon;
-            this.ullat = ullat;
-            this.lrlon = lrlon;
-            this.lrlat = lrlat;
-            this.width = width;
-            this.height = height;
-
-            lonDPP = calLonDPP(ullon, lrlon, width);
-        }
-    }
-
-    /** returns the lon distance per pixel */
-    public static double calLonDPP(double ullon, double lrlon, double width){
-        return Math.abs((ullon - lrlon)/width);
+    private double lonDPP(double lrlon, double ullon, double width) {
+        return (lrlon - ullon) / width;
     }
 
     @Override
@@ -275,7 +200,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      * we made this into provided code since it was just a bit too low level.
      */
     private  void writeImagesToOutputStream(Map<String, Object> rasteredImageParams,
-                                                  ByteArrayOutputStream os) {
+                                            ByteArrayOutputStream os) {
         String[][] renderGrid = (String[][]) rasteredImageParams.get("render_grid");
         int numVertTiles = renderGrid.length;
         int numHorizTiles = renderGrid[0].length;
