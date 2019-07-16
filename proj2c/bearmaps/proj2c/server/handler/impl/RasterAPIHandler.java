@@ -86,10 +86,46 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
         System.out.println("yo, wanna know the parameters given by the web browser? They are:");
         System.out.println(requestParams);
+
+        /** create query box object */
+        double ullon = requestParams.get("ullon");
+        double ullat = requestParams.get("ullat");
+        double lrlon = requestParams.get("lrlon");
+        double lrlat = requestParams.get("lrlat");
+        double width = requestParams.get("w");
+        double height = requestParams.get("h");
+
+        QueryBox queryBox = new QueryBox(ullon, ullat, lrlon, lrlat, width, height);
+
         Map<String, Object> results = new HashMap<>();
         System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
                 + "your browser.");
         return results;
+    }
+
+    //public class
+
+    /** query box*/
+    public class QueryBox{
+
+        double ullon;
+        double ullat;
+        double lrlon;
+        double lrlat;
+        double lonDPP;
+        double width;
+        double height;
+
+        public QueryBox(double ullon, double ullat, double lrlon, double lrlat, double width, double height){
+            this.ullon = ullon;
+            this.ullat = ullat;
+            this.lrlon = lrlon;
+            this.lrlat = lrlat;
+            this.width = width;
+            this.height = height;
+
+            lonDPP = calLonDPP(ullon, lrlon, width);
+        }
     }
 
     /** returns the lon distance per pixel */
