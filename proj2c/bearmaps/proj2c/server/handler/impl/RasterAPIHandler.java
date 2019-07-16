@@ -92,6 +92,11 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         return results;
     }
 
+    /** returns the lon distance per pixel */
+    public static double calLonDPP(double ullon, double lrlon, double width){
+        return Math.abs((ullon - lrlon)/width);
+    }
+
     @Override
     protected Object buildJsonResponse(Map<String, Object> result) {
         boolean rasterSuccess = validateRasteredImgParams(result);
