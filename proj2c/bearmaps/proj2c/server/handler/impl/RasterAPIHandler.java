@@ -12,13 +12,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
-import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
-import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
+import static bearmaps.proj2c.utils.Constants.*;
 
 /**
  * Handles requests from the web browser for map images. These images
@@ -103,8 +100,23 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         return results;
     }
 
+    public static Depth getDepth(QueryBox queryBox){
+        for (int i = 0; i<8; i++){
+            Depth d = new Depth(i);
+            Image image = d.images[0][0];
+            double lonDPP = calLonDPP(image.upperLeft.longitude,image.lowerRight.longitude,TILE_SIZE);
+
+            if (queryBox.lonDPP >= lonDPP){
+                return d;
+            }
+        }
+        return null;
+    }
+
     public static class Depth{
 
+        final double widthOfImages;
+        final double heightOfImages;
         final Image[][] images;
 
         public Depth(int depth){
@@ -113,6 +125,10 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             int rowsTotal = (int) Math.pow(2, depth);
             int columnsTotal = (int) Math.pow(2, depth);
 
+            widthOfImages = Math.abs(ROOT_ULLON - ROOT_LRLON)/rowsTotal;
+            heightOfImages = Math.abs(ROOT_ULLAT - ROOT_LRLAT)/rowsTotal;
+
+
             images = new Image[rowsTotal][columnsTotal];
 
             for (int y = 0; y<rowsTotal; y++){
@@ -120,9 +136,8 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
                 for (int x = 0; x<columnsTotal; x++) {
 
                     String name = "d" + depth + "_x" + x + "_y" + y + ".png";
-                    images[x][y] = new Image(name);
+                    images[x][y] = new Image(name, widthOfImages, heightOfImages, x, y);
                 }
-
             }
         }
     }
@@ -130,13 +145,58 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     public static class Image{
 
         String name;
+        HashMap<String, Integer> coordinates;
+        double widthOfImages;
+        Set corners;
+        Corner upperLeft;
+        Corner lowerRight;
 
-        public Image(String name){
+        public Image(String name, double widthOfImages, double heightOfImages, int x, int y){
+
             this.name = name;
+            this.widthOfImages = widthOfImages;
+            coordinates = new HashMap<>();
+            coordinates.put("x", x);
+            coordinates.put("y", y);
+            corners = new HashSet();
+
+            // x, column is latitude
+            // y, row is longitude
+
+            for (int column = 0; column<2; column++){
+                for (int row = 0; row<2; row++){
+
+                    double xCoordinate = ROOT_ULLON + widthOfImages*(x+column);
+                    double yCoordinate = ROOT_ULLAT - heightOfImages*(y+row);
+
+                    Corner corner = new Corner(xCoordinate , yCoordinate);
+
+                    if (column == 0 && row == 0){
+                        upperLeft = corner;
+                    } else if ( column == 1 && row == 1){
+                        lowerRight = corner;
+                    }
+
+                    corners.add(corner);
+                }
+            }
+
         }
     }
 
-    public class QueryBox{
+    public static class Corner{
+
+        double longitude;
+        double latitude;
+
+        public Corner(double longitude, double latitude){
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+    }
+
+    public static class QueryBox{
 
         double ullon;
         double ullat;
