@@ -103,9 +103,39 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         return results;
     }
 
-    //public class
+    public static class Depth{
 
-    /** query box*/
+        final Image[][] images;
+
+        public Depth(int depth){
+
+            int numberOfImages = (int) Math.pow(4,depth);
+            int rowsTotal = (int) Math.pow(2, depth);
+            int columnsTotal = (int) Math.pow(2, depth);
+
+            images = new Image[rowsTotal][columnsTotal];
+
+            for (int y = 0; y<rowsTotal; y++){
+
+                for (int x = 0; x<columnsTotal; x++) {
+
+                    String name = "d" + depth + "_x" + x + "_y" + y + ".png";
+                    images[x][y] = new Image(name);
+                }
+
+            }
+        }
+    }
+
+    public static class Image{
+
+        String name;
+
+        public Image(String name){
+            this.name = name;
+        }
+    }
+
     public class QueryBox{
 
         double ullon;
