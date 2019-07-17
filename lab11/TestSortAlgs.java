@@ -7,7 +7,14 @@ public class TestSortAlgs {
 
     @Test
     public void testQuickSort() {
+        Queue<Integer> actualQue = new Queue<>();
+        actualQue.enqueue(1);
+        actualQue.enqueue(2);
+        actualQue.enqueue(-1);
 
+
+        Queue<Integer> output = QuickSort.quickSort(actualQue);
+        assertTrue(isSorted(output));
     }
 
     @Test
